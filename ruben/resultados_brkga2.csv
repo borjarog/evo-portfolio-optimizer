@@ -1,0 +1,10 @@
+Instance,Strategy,Fitness,Avg_Time
+instance_n1000_k100_15.json,brkga2,-inf,60.0
+instance_n1000_k50_14.json,brkga2,-inf,60.0
+instance_n100_k10_7.json,brkga2,0.37381556658929427,60.0
+instance_n100_k5_5.json,brkga2,0.35910838431921366,60.0
+instance_n500_k25_9.json,brkga2,0.37630194065385225,60.0
+instance_n500_k50_12.json,brkga2,-inf,60.0
+instance_n50_k2_1.json,brkga2,0.248125,60.00589575767517
+instance_n50_k2_2.json,brkga2,0.2375,60.002482891082764
+instance_n50_k5_4.json,brkga2,0.28447600693602504,60.0

@@ -1,0 +1,10 @@
+Instance,Strategy,Fitness,Time
+instance_n1000_k100_15.json,tabu_improved_warnings,0.24927411,60
+instance_n1000_k50_14.json,tabu_improved_warnings,0.3461128215334812,60
+instance_n100_k10_7.json,tabu_improved_warnings,0.3657537252986844,60
+instance_n100_k5_5.json,tabu_improved_warnings,0.3684812957219233,60
+instance_n500_k25_9.json,tabu_improved_warnings,0.30538774933596236,60
+instance_n500_k50_12.json,tabu_improved_warnings,0.3415423412333385,60
+instance_n50_k2_1.json,tabu_improved_warnings,0.247675,60
+instance_n50_k2_2.json,tabu_improved_warnings,0.2375,60
+instance_n50_k5_4.json,tabu_improved_warnings,0.28728645219733084,60
