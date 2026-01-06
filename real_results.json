@@ -1,0 +1,83 @@
+[
+  {
+    "instance": "instance_n1000_k100_15",
+    "n": 1000,
+    "k": 100,
+    "best_fitness": 0.3868730471335675,
+    "execution_time": 18.438032865524292,
+    "strategy": "PSO+Local",
+    "success": true
+  },
+  {
+    "instance": "instance_n1000_k50_14",
+    "n": 1000,
+    "k": 50,
+    "best_fitness": 0.37090712749136723,
+    "execution_time": 14.647098064422607,
+    "strategy": "PSO+Local",
+    "success": true
+  },
+  {
+    "instance": "instance_n100_k10_7",
+    "n": 100,
+    "k": 10,
+    "best_fitness": 0.3664339658227751,
+    "execution_time": 14.525613784790039,
+    "strategy": "DE+VNS+Tabu",
+    "success": true
+  },
+  {
+    "instance": "instance_n100_k5_5",
+    "n": 100,
+    "k": 5,
+    "best_fitness": 0.3581190550885328,
+    "execution_time": 14.51259183883667,
+    "strategy": "DE+VNS+Tabu",
+    "success": true
+  },
+  {
+    "instance": "instance_n500_k25_9",
+    "n": 500,
+    "k": 25,
+    "best_fitness": 0.37932671202765206,
+    "execution_time": 14.736251831054688,
+    "strategy": "PSO+Local",
+    "success": true
+  },
+  {
+    "instance": "instance_n500_k50_12",
+    "n": 500,
+    "k": 50,
+    "best_fitness": 0.36883008345931406,
+    "execution_time": 14.89816427230835,
+    "strategy": "PSO+Local",
+    "success": true
+  },
+  {
+    "instance": "instance_n50_k2_1",
+    "n": 50,
+    "k": 2,
+    "best_fitness": 0.248125,
+    "execution_time": 14.502625226974487,
+    "strategy": "DE+VNS+Tabu",
+    "success": true
+  },
+  {
+    "instance": "instance_n50_k2_2",
+    "n": 50,
+    "k": 2,
+    "best_fitness": 0.2375,
+    "execution_time": 14.50235891342163,
+    "strategy": "DE+VNS+Tabu",
+    "success": true
+  },
+  {
+    "instance": "instance_n50_k5_4",
+    "n": 50,
+    "k": 5,
+    "best_fitness": 0.2872864522052159,
+    "execution_time": 14.502180814743042,
+    "strategy": "DE+VNS+Tabu",
+    "success": true
+  }
+]
