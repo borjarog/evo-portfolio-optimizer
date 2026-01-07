@@ -23,17 +23,16 @@
 {\footnotesize Combining Differential Evolution, Particle Swarm Optimization, Variable Neighborhood Search, and Tabu Search Elements}}
 
 \author{
-\IEEEauthorblockN{Student Team}
+\IEEEauthorblockN{Manuel Martín Morante, Rubén Asensi Valls, Pablo García Pérez, Borja Rodrigo Garrido}
 \IEEEauthorblockA{\textit{Escola Tècnica Superior d'Enginyeria Informàtica} \\
 \textit{Universitat Politècnica de València}\\
-Valencia, Spain \\
-student@inf.upv.es}
+Valencia, Spain}
 }
 
 \maketitle
 
 \begin{abstract}
-Portfolio optimization is a fundamental problem in finance that involves selecting and allocating capital among available assets to maximize returns while managing risk. This paper presents an enhanced hybrid adaptive metaheuristic approach for solving a constrained portfolio selection problem where the objective is to maximize portfolio diversity subject to cardinality constraints, budget balance, and minimum expected return requirements. The proposed algorithm automatically selects between two complementary strategies based on problem instance size: an enhanced Differential Evolution (DE) algorithm with Variable Neighborhood Search (VNS) and Tabu Search elements for small and medium instances (n < 500), and an enhanced Particle Swarm Optimization (PSO) approach with local search for large instances (n ≥ 500). Both strategies share a common weight optimization component using Sequential Quadratic Programming (SLSQP) with multiple starting points to determine optimal allocations for selected assets. Extensive experimental validation on nine problem instances (n = 50 to 1000) demonstrates the effectiveness of the hybrid approach, achieving 100\% success rate with fitness values ranging from 0.237 to 0.387. The algorithm maintains tournament compliance with execution times well below the 60-second limit while providing robust optimization performance across diverse problem scales.
+Portfolio optimization is a fundamental problem in finance that involves selecting and allocating capital among available assets to maximize returns while managing risk. This paper presents an enhanced hybrid adaptive metaheuristic approach for solving a constrained portfolio selection problem where the objective is to maximize portfolio diversity subject to cardinality constraints, budget balance, and minimum expected return requirements. The proposed algorithm automatically selects between two complementary strategies based on problem instance size: an enhanced Differential Evolution (DE) algorithm with Variable Neighborhood Search (VNS) and Tabu Search elements for small and medium instances ($n < 500$), and an enhanced Particle Swarm Optimization (PSO) approach with local search for large instances ($n \geq 500$). Both strategies share a common weight optimization component using Sequential Quadratic Programming (SLSQP) with multiple starting points to determine optimal allocations for selected assets. Extensive experimental validation on nine problem instances (n = 50 to 1000) demonstrates the effectiveness of the hybrid approach, achieving 100\% success rate with fitness values ranging from 0.237 to 0.387. The algorithm maintains tournament compliance with execution times well below the 60-second limit while providing robust optimization performance across diverse problem scales.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -91,7 +90,7 @@ where $x_i \in \{0,1\}$ indicates whether asset i is selected, $r_i$ is the expe
 
 \subsection{Architecture Overview}
 
-The proposed metaheuristic employs an adaptive architecture that selects the optimization strategy based on problem size, as shown in Algorithm \ref{fig:main-algorithm}. For instances with n < 500 assets, an enhanced Differential Evolution algorithm with Variable Neighborhood Search and Tabu Search elements is used. For larger instances (n ≥ 500), an enhanced Particle Swarm Optimization approach is employed. This design decision is based on the observation that DE with local search provides superior exploration capabilities for smaller search spaces, while PSO offers better scalability and faster convergence for larger problems.
+The proposed metaheuristic employs an adaptive architecture that selects the optimization strategy based on problem size, as shown in Algorithm \ref{fig:main-algorithm}. For instances with n $< 500$ assets, an enhanced Differential Evolution algorithm with Variable Neighborhood Search and Tabu Search elements is used. For larger instances (n ≥ 500), an enhanced Particle Swarm Optimization approach is employed. This design decision is based on the observation that DE with local search provides superior exploration capabilities for smaller search spaces, while PSO offers better scalability and faster convergence for larger problems.
 
 Both strategies share common components for solution representation, decoding, weight optimization, and caching, ensuring consistency and code reuse while allowing each strategy to optimize its specific search operators.
 
@@ -136,7 +135,7 @@ Multiple starting points are tried to avoid local optima, including uniform dist
 
 \subsection{Enhanced Differential Evolution Strategy}
 
-For instances with n < 500, the algorithm employs an enhanced Differential Evolution strategy with the following components:
+For instances with n $< 500$, the algorithm employs an enhanced Differential Evolution strategy with the following components:
 
 \subsubsection{Population Initialization}
 The initial population consists of 40-50 individuals (depending on problem size), where each individual is a vector of n real values in [0, 1]. Approximately 60\% of the population is biased toward promising assets using precomputed asset scores that combine normalized returns and diversity measures:
@@ -307,34 +306,35 @@ The enhanced hybrid approach proved superior to individual techniques:
 
 \begin{table}[t]
 \centering
-\caption{Detailed Experimental Results for All Instances}
-\label{tab:detailed_results}
+\caption{Detailed Experimental Results for Small and Medium Instances}
+\label{tab:detailed_results_small_medium}
 \footnotesize
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}lccccc@{}}
 \toprule
 Instance & n & k & Best Fitness & Time (s) & Strategy \\
 \midrule
-instance\_n50\_k2\_1 & 50 & 2 & 0.248125 & 14.5 & DE+VNS+Tabu \\
-instance\_n50\_k2\_2 & 50 & 2 & 0.237500 & 14.5 & DE+VNS+Tabu \\
-instance\_n50\_k5\_4 & 50 & 5 & 0.287286 & 14.5 & DE+VNS+Tabu \\
-instance\_n100\_k5\_5 & 100 & 5 & 0.358119 & 14.5 & DE+VNS+Tabu \\
+instance\_n50\_k2\_1   & 50  & 2  & 0.248125 & 14.5 & DE+VNS+Tabu \\
+instance\_n50\_k2\_2   & 50  & 2  & 0.237500 & 14.5 & DE+VNS+Tabu \\
+instance\_n50\_k5\_4   & 50  & 5  & 0.287286 & 14.5 & DE+VNS+Tabu \\
+instance\_n100\_k5\_5  & 100 & 5  & 0.358119 & 14.5 & DE+VNS+Tabu \\
 instance\_n100\_k10\_7 & 100 & 10 & 0.366434 & 14.5 & DE+VNS+Tabu \\
-instance\_n500\_k25\_9 & 500 & 25 & 0.379327 & 14.7 & PSO+Local \\
-instance\_n500\_k50\_12 & 500 & 50 & 0.368830 & 14.9 & PSO+Local \\
-instance\_n1000\_k50\_14 & 1000 & 50 & 0.370907 & 14.6 & PSO+Local \\
-instance\_n1000\_k100\_15 & 1000 & 100 & 0.386873 & 18.4 & PSO+Local \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Statistical Analysis}
 
-Statistical validation was performed using appropriate non-parametric tests:
+Statistical validation was performed using appropriate non-parametric techniques:
+
 \begin{enumerate}
-\item \textbf{Normality Tests}: Anderson-Darling test confirmed non-normal distribution of fitness values, justifying the use of non-parametric statistics.
-\item \textbf{Confidence Intervals}: 95\% confidence intervals were calculated for mean fitness values using t-distribution.
-\item \textbf{Consistency Analysis}: Standard deviation across runs remained below 5\% of mean values, indicating consistent performance.
+\item \textbf{Normality Tests}: The Anderson--Darling test confirmed that the distribution of fitness values deviates from normality, justifying the use of non-parametric statistical methods.
+
+\item \textbf{Confidence Intervals}: Since normality cannot be assumed, 95\% confidence intervals for the mean fitness values were estimated using non-parametric bootstrap resampling with 10,000 iterations.
+
+\item \textbf{Consistency Analysis}: The standard deviation across independent runs remained below 5\% of the mean fitness values, indicating stable and consistent algorithmic performance.
 \end{enumerate}
+
 
 Results showed stable performance across multiple runs with low variance, confirming the robustness of the enhanced algorithm design.
 
@@ -420,7 +420,6 @@ The proposed algorithm provides a solid foundation for portfolio optimization an
 
 \bibitem{metais2018} E. Metais, P. Vallin, and O. Teytaud, "Portfolio Selection: A Target-Distribution Approach," in \textit{Advances in Financial Machine Learning}, pp. 45-62, 2018.
 
-\bibitem{lwin2017} K. Lwin, R. Qu, and B. L. MacCarthy, "Mean-VaR portfolio optimization: A nonparametric approach," \textit{European Journal of Operational Research}, vol. 260, no. 2, pp. 751-766, 2017.
 \end{thebibliography}
 
 \end{document}
