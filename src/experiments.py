@@ -24,7 +24,8 @@ from metaheuristic import Metaheuristic
 # ==================== CONFIGURATION ====================
 
 # Experimental settings
-N_RUNS = 5          # Replications per configuration
+N_RUNS = 5          # Replications per configuration (for final evaluation)
+N_RUNS_OPTIMIZATION = 3  # Replications for hyperparameter optimization (faster)
 DEADLINE = 60       # Seconds per run (tournament specification)
 SEED_BASE = 42      # Base seed for reproducibility
 
@@ -38,6 +39,22 @@ PARAM_GRID = {
     'local_search_interval': [8, 10, 12],
     'restart_threshold_factor': [0.8, 1.0, 1.2]
 }
+
+# Fast mode: reduced grid for quick testing
+PARAM_GRID_FAST = {
+    'vns_probability': [0.2, 0.4],  # Only extremes + middle
+    'local_search_interval': [8, 12],
+    'restart_threshold_factor': [0.8, 1.2]
+}
+
+# Representative instances for optimization (small, medium, large)
+# Format: (n, k) tuples to match instances
+REPRESENTATIVE_INSTANCES = [
+    'instance_n50_k2_1.json',      # Small
+    'instance_n100_k10_7.json',    # Medium-small
+    'instance_n500_k25_9.json',    # Medium-large
+    'instance_n1000_k50_14.json'   # Large
+]
 
 # Default optimized configuration
 DEFAULT_CONFIG = {
@@ -143,31 +160,55 @@ def run_multiple_experiments(instance_path, config=None, n_runs=N_RUNS, deadline
 
 # ==================== HYPERPARAMETER OPTIMIZATION ====================
 
-def hyperparameter_optimization(instances=None, output_file='hyperparameter_results.csv'):
+def hyperparameter_optimization(instances=None, output_file='hyperparameter_results.csv', 
+                                fast_mode=False, param_grid=None, n_runs_opt=None):
     """
     Perform grid search over hyperparameters.
 
     Args:
-        instances: List of instance files (None for all)
+        instances: List of instance files (None for all or representative subset)
         output_file: Output CSV file name
+        fast_mode: If True, use reduced grid and representative instances
+        param_grid: Custom parameter grid (None for default)
+        n_runs_opt: Number of runs for optimization (None for default)
 
     Returns:
         DataFrame with results and best configuration
     """
+    if param_grid is None:
+        param_grid = PARAM_GRID_FAST if fast_mode else PARAM_GRID
+    
+    if n_runs_opt is None:
+        n_runs_opt = N_RUNS_OPTIMIZATION if fast_mode else N_RUNS
+    
     if instances is None:
-        instances = get_instance_files()[:3]  # Use subset for efficiency
+        if fast_mode:
+            # Use representative subset for faster optimization
+            all_instances = get_instance_files()
+            instances = [inst for inst in all_instances 
+                        if inst.name in REPRESENTATIVE_INSTANCES]
+            if not instances:
+                # Fallback: use first 4 instances
+                instances = all_instances[:4]
+        else:
+            # Use all available instances for comprehensive optimization
+            # as recommended in project statement: "employ different instances 
+            # when optimizing the configuration of the metaheuristic"
+            instances = get_instance_files()
 
     print("=" * 70)
     print("HYPERPARAMETER OPTIMIZATION")
-    print(f"Parameters: {list(PARAM_GRID.keys())}")
+    if fast_mode:
+        print("⚡ FAST MODE ENABLED ⚡")
+    print(f"Parameters: {list(param_grid.keys())}")
     print(f"Instances: {len(instances)}")
-    print(f"Runs per config: {N_RUNS}")
+    print(f"Runs per config: {n_runs_opt}")
     print("=" * 70)
 
     results = []
 
     # Test each parameter independently
-    for param_name, param_values in PARAM_GRID.items():
+    for param_name, param_values in param_grid.items():
         print(f"\n>>> Optimizing parameter: {param_name}")
 
         for param_value in param_values:
@@ -182,7 +223,7 @@ def hyperparameter_optimization(instances=None, output_file='hyperparameter_resu
             for instance_path in instances:
                 instance_name = instance_path.name
 
-                stats = run_multiple_experiments(instance_path, config, n_runs=3)  # Reduced for speed
+                stats = run_multiple_experiments(instance_path, config, n_runs=n_runs_opt)
                 param_results.append(stats['mean_fitness'])
 
                 results.append({
@@ -353,25 +394,47 @@ def statistical_analysis(results_df):
 
 # ==================== MAIN EXECUTION ====================
 
-def main():
-    """Main experimental execution."""
+def main(fast_mode=False):
+    """
+    Main experimental execution.
+    
+    Args:
+        fast_mode: If True, use reduced configuration for faster execution
+    """
     print("Enhanced Portfolio Optimizer - Experimental Framework")
+    if fast_mode:
+        print("⚡ FAST MODE: Reduced instances and runs for quicker results ⚡")
     print("=" * 70)
 
     # Create results directory
     RESULTS_DIR.mkdir(exist_ok=True)
 
     # Get instances
-    instances = get_instance_files()
-    print(f"Found {len(instances)} instances")
+    all_instances = get_instance_files()
+    print(f"Found {len(all_instances)} total instances")
 
-    # 1. Hyperparameter optimization (on subset)
-    print("\n1. HYPERPARAMETER OPTIMIZATION")
-    param_df, best_config = hyperparameter_optimization(instances[:3])
+    # 1. Hyperparameter optimization
+    if fast_mode:
+        print("\n1. HYPERPARAMETER OPTIMIZATION (FAST MODE)")
+        print("   Using representative instances and reduced grid")
+        param_df, best_config = hyperparameter_optimization(
+            instances=None, 
+            fast_mode=True,
+            output_file='hyperparameter_results_fast.csv'
+        )
+    else:
+        print("\n1. HYPERPARAMETER OPTIMIZATION")
+        print("   Using all instances as recommended: 'employ different instances")
+        print("   when optimizing the configuration of the metaheuristic'")
+        param_df, best_config = hyperparameter_optimization(
+            instances=all_instances,
+            fast_mode=False
+        )
 
-    # 2. Performance evaluation with best configuration
+    # 2. Performance evaluation with best configuration (always use all instances)
     print("\n2. PERFORMANCE EVALUATION")
-    perf_df = performance_evaluation(instances, best_config)
+    print("   Evaluating on ALL instances with best configuration")
+    perf_df = performance_evaluation(all_instances, best_config)
 
     # 3. Statistical analysis
     print("\n3. STATISTICAL ANALYSIS")
@@ -382,12 +445,28 @@ def main():
     print("Check the 'results/' directory for detailed outputs")
     print("=" * 70)
 
+def main_fast():
+    """Convenience function for fast mode execution."""
+    main(fast_mode=True)
+
 if __name__ == "__main__":
+    import sys
+    
+    # Check for fast mode argument
+    fast_mode = "--fast" in sys.argv or "-f" in sys.argv
+    
     try:
         import pandas as pd
-        main()
-    except ImportError:
-        print("Error: pandas not installed. Install with: pip install pandas")
+        if fast_mode:
+            print("🚀 Starting experiments in FAST MODE...")
+            main_fast()
+        else:
+            print("🔬 Starting experiments in FULL MODE...")
+            print("   (Use --fast or -f flag for faster execution)")
+            main()
+    except ImportError as e:
+        print(f"Error: Required package not installed: {e}")
+        print("Install dependencies with: pip install pandas numpy scipy")
     except Exception as e:
         print(f"Error during execution: {e}")
         import traceback
